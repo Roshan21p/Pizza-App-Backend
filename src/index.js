@@ -6,9 +6,10 @@ const connectDB = require('./config/dbConfig');
 
 const app = express();
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.text());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extened: true}));
 
 app.post('/ping', (req,res) => {
     console.log(req.body);
@@ -20,4 +21,6 @@ app.listen(ServerConfig.PORT, async () => {
     await connectDB();
     console.log(`Server started at port ${ServerConfig.PORT}`); 
 });
+
+
 
