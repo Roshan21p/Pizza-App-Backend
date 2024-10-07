@@ -4,6 +4,7 @@ const ServerConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
 const userRouter = require('./routes/userRoute');
 const { getCartById } = require('./controllers/cartController');
+const authRouter = require('./routes/authRoute');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true}));
 // If your req route starts with /users then handle it using userRouter
 app.use('/users', userRouter);  // connects the router to the server
 app.use('/carts', getCartById);
+app.use('/auth', authRouter);
 
 app.post('/ping', (req,res) => {
     console.log(req.body);
