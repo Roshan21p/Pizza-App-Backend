@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -44,6 +45,15 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+userSchema.pre('save', async function(){
+    //here u can modify your user before it is saved in mongodb
+    console.log("Executing pre save hook");
+    console.log(this);
+    const hashPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashPassword;
+    console.log(this);   
+    console.log("Exitting pre save hook and now creating user");
+})
 
 const User = mongoose.model("User", userSchema); // collection
 
