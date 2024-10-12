@@ -1,4 +1,5 @@
 const { findUser, createUser } = require("../repositories/userRepository");
+const { createCart } = require('../repositories/cartRepository')
 
 async function registerUser(userDetails){
         
@@ -24,18 +25,18 @@ async function registerUser(userDetails){
             mobileNumber: userDetails.mobileNumber,
         })
 
-
         // here we check whether the newUser is undefined or null
         if(!newUser){
             throw {reason: 'Something wenr wrong, cannot create user', statusCode: 500};
         }
 
+    
+        await createCart(newUser._id);
 
         //3.return the details of created user
-        return newUser
+        return newUser;
 
 }
-
 
 module.exports = {
     registerUser,
