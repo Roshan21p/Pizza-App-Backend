@@ -21,7 +21,7 @@ async function login(req, res){
             data: {},
             error: {},
         })
-    } catch (error) {
+    } catch(error) {
         return res.status(error.statusCode).json({
             success: false,
             data: {},

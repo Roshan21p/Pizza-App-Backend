@@ -25,6 +25,7 @@ app.use('/carts', getCartById);
 app.use('/auth', authRouter);
 app.use('/products', productRouter);
 
+
 app.get('/ping', isLoggedIn, (req,res) => {
     //controller
     console.log(req.body);
