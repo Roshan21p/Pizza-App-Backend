@@ -3,7 +3,6 @@ const cookieParser = require('cookie-parser')
 const ServerConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
 const userRouter = require('./routes/userRoute');
-const { getCartByUser } = require('./controllers/cartController');
 const authRouter = require('./routes/authRoute');
 const { isLoggedIn } = require('./validation/authValidator');
 const uploader = require('./middleware/multerMiddleware');
@@ -50,6 +49,5 @@ app.post('/photo', uploader.single('incomingFile'), async (req,res) => {
 app.listen(ServerConfig.PORT, async () => {
     await connectDB();
     console.log(`Server started at port ${ServerConfig.PORT}`); 
-
 });
 
