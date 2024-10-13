@@ -1,4 +1,4 @@
-const { getCartByUserId } = require("../repositories/cartRepository");
+const { getCartByUserId, clearCart } = require("../repositories/cartRepository");
 const { getProductById } = require("../repositories/productRepository");
 const AppError = require("../utils/appError");
 const BadRequestError = require("../utils/badRequestError");
@@ -48,7 +48,6 @@ async function modifyCart(userId, productId, shouldAdd = true){
                 foundProduct = true;
         }
     });
-
     if(!foundProduct){
         if(shouldAdd){
             cart.items.push({
@@ -59,14 +58,18 @@ async function modifyCart(userId, productId, shouldAdd = true){
             throw new NotFoundError("Product in the cart");
         }
     }
-
     await cart.save();
-
     return cart;
+}
+
+async function clearProductsFromCart(userId){
+    const response = await clearCart(userId);
+    return response;
 }
 
 
 module.exports = {
     getCart,
     modifyCart,
+    clearProductsFromCart,
 }
