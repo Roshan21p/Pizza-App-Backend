@@ -9,10 +9,13 @@ async function createProduct(productDetails){
     // 1. We should check if an image is coming to createthe product, then we should first upload it on cloudinary 
 
     const imagePath = productDetails.imagePath;
+    console.log(imagePath);
+    
     if(imagePath){
         try {
             const cloudinaryResponse = await cloudinary.uploader.upload(imagePath);
             var productImage = cloudinaryResponse.secure_url;
+            console.log(productImage);
             await fs.unlink(process.cwd() + "/" + imagePath);
         } catch (error) {
             console.log(error);  

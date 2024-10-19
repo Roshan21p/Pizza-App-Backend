@@ -31,8 +31,7 @@ async function getCartByUser(req, res){
     }
 }
 
-async function modifyProductToCart(req, res){
-    
+async function modifyProductToCart(req, res){    
     try {
         const cart = await modifyCart(req.user.id, req.params.productId, req.params.operation == "add");        
         return res.status(200).json({
