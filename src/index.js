@@ -4,10 +4,6 @@ const ServerConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
 const userRouter = require('./routes/userRoute');
 const authRouter = require('./routes/authRoute');
-const { isLoggedIn } = require('./validation/authValidator');
-const uploader = require('./middleware/multerMiddleware');
-const cloudinary = require('./config/cloudinaryConfig')
-const fs = require('fs/promises');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
@@ -27,25 +23,12 @@ app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 
-app.get('/ping', isLoggedIn, (req,res) => {
+app.get('/ping', (req,res) => {
     //controller
     console.log(req.body);
     console.log(req.cookies); 
     return res.json({message: "pong"});
 })
-
-app.post('/photo', uploader.single('incomingFile'), async (req,res) => {
-    try{
-        const result = await cloudinary.uploader.upload(req.file.path);        
-        console.log("result from cloudinary", result);
-        await fs.unlink(req.file.path);
-        return res.json({message: 'ok'});  
-    } catch(e){
-        console.log("error: ",e);   
-    }
-
-})
-
 
 app.listen(ServerConfig.PORT, async () => {
     await connectDB();
