@@ -21,6 +21,7 @@ async function isLoggedIn(req, res, next) {
             throw new UnAuthorisedError();
         }
 
+       // if(decoded.role === "ADMIN") throw new UnAuthorisedError();
         //if reached here, then user is authenticated allow then to access the api
             req.user = {
                 email: decoded.email,

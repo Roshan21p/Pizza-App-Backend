@@ -23,6 +23,7 @@ async function registerUser(userDetails){
             firstName: userDetails.firstName,
             lastName: userDetails.lastName,
             mobileNumber: userDetails.mobileNumber,
+            address: userDetails.address,
         })
 
         // here we check whether the newUser is undefined or null
