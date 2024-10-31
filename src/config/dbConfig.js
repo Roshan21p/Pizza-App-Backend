@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const serverConfig = require('./serverConfig');
+const serverConfig = require('./serverConfig.js');
 
 const connectDB = async () => {
     try {
@@ -12,5 +12,6 @@ const connectDB = async () => {
         process.exit(1);
     }
 }
+
 
 module.exports = connectDB;
