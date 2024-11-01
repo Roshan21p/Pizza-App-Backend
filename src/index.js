@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
@@ -45,5 +43,3 @@ app.listen(ServerConfig.PORT, async () => {
     console.log(`Server started at port ${ServerConfig.PORT}`); 
 });
 
-
->>>>>>> c7aa9e8 (Modified backend)

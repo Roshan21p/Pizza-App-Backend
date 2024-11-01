@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const { loginUser } = require("../services/authService");
 
 
@@ -57,4 +55,3 @@ module.exports = {
     login,
     logout,
 }
->>>>>>> c7aa9e8 (Modified backend)

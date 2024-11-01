@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const cloudinary = require('../config/cloudinaryConfig');
 const ProductRepository = require('../repositories/productRepository');
 const fs = require('fs/promises');
@@ -74,4 +72,3 @@ module.exports = {
     deleteProductById,
     getAllProductsData,
 }
->>>>>>> c7aa9e8 (Modified backend)

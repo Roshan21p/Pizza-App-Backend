@@ -1,4 +1,4 @@
-const { createProduct, getProductId, getProductById, deleteProductById, getAllProductData } = require("../services/productService");
+const { createProduct, getProductById, deleteProductById, getAllProductsData ,} = require("../services/productService");
 const AppError = require("../utils/appError");
 
 async function addProduct(req, res){    
@@ -128,4 +128,3 @@ module.exports = {
     deleteProduct,
     getProducts,
 }
->>>>>>> c7aa9e8 (Modified backend)

@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 const { findUser } = require("../repositories/userRepository");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
@@ -40,4 +39,4 @@ async function loginUser(authDetails){
 module.exports = {
     loginUser,
 }
->>>>>>> c7aa9e8 (Modified backend)
+

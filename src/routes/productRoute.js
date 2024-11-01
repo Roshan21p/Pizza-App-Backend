@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const express = require('express');
 const { addProduct, getProduct, deleteProduct, getProducts } = require('../controllers/productController');
 const uploader = require('../middleware/multerMiddleware');
@@ -19,4 +17,3 @@ productRouter.get('/', getProducts);
 productRouter.delete('/:id', deleteProduct)
 
 module.exports = productRouter;
->>>>>>> c7aa9e8 (Modified backend)

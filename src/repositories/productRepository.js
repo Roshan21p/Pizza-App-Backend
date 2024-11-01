@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const Product = require("../schema/productSchema");
 const BadRequestError = require("../utils/badRequestError");
 const InternalServerError = require("../utils/internalServerError");
@@ -57,4 +55,3 @@ module.exports = {
     deleteProductById,
     getAllProducts,
 }
->>>>>>> c7aa9e8 (Modified backend)
