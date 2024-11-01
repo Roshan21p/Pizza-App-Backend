@@ -30,7 +30,15 @@ async function getProductById(productId){
     }
 }
 
-
+async function getAllProducts() {
+    try {
+        const products = await Product.find({});
+        return products;
+    } catch (error) {
+        console.log(error);
+        throw new InternalServerError();
+    }
+}
 
 async function deleteProductById(productId){
     try {
@@ -47,5 +55,6 @@ module.exports = {
     createProduct,
     getProductById,
     deleteProductById,
+    getAllProducts,
 }
 >>>>>>> c7aa9e8 (Modified backend)
