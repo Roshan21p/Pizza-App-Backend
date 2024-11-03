@@ -10,10 +10,11 @@ const authRouter = require('./routes/authRoute');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
+const serverConfig = require('./config/serverConfig.js');
 
 const app = express();
 app.use(cors({
-    origin: 'http://localhost:5173', // allow to server to accept request from different origin
+    origin: serverConfig.FRONTEND_URL, // allow to server to accept request from different origin
     credentials: true, // allow session cookie from browser to pass through
 }));
 
