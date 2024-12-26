@@ -8,6 +8,7 @@ async function findUser(parameters) {
         return response;
     } catch(error) {
         console.log(error);
+        throw new InternalServerError()
     }
     
 } 

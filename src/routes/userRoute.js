@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, updateProfile } = require('../controllers/userController');
+const { createUser, updateProfile, getProfile } = require('../controllers/userController');
 const { isLoggedIn } = require('../validation/authValidator');
 const uploader = require('../middleware/multerMiddleware');
 
@@ -9,5 +9,6 @@ const userRouter = express.Router();
 
 userRouter.post('/', createUser) // this is a route registration
 userRouter.put('/me', isLoggedIn, uploader.single("avatar") , updateProfile);
+userRouter.get('/', isLoggedIn, getProfile);
 
 module.exports = userRouter;   // exporting the router

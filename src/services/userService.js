@@ -5,6 +5,7 @@ const cloudinary = require('../config/cloudinaryConfig');
 const fs = require('fs/promises');
 const path = require('path');
 const InternalServerError = require("../utils/internalServerError");
+const NotFoundError = require("../utils/notFoundError");
 
 
 async function registerUser(userDetails){
@@ -29,7 +30,6 @@ async function registerUser(userDetails){
             firstName: userDetails.firstName,
             lastName: userDetails.lastName,
             mobileNumber: userDetails.mobileNumber,
-            address: userDetails.address,
             avatar: {
                 public_id: '',
                 secure_url: '',
@@ -38,12 +38,13 @@ async function registerUser(userDetails){
 
         // here we check whether the newUser is undefined or null
         if(!newUser){
-            throw {reason: 'Something went wrong, cannot create user', statusCode: 500};
+            throw new InternalServerError('Something went wrong, cannot create user');
         }
 
     
         await createCart(newUser._id);
 
+        newUser.password = undefined
         //3.return the details of created user
         return newUser;
 
@@ -95,7 +96,22 @@ async function updateUserProfile(userDetails, userId, image){
     return user;
 }
 
+async function fetchUserProfile(userId){
+    const user = await findUser({
+       _id : userId,
+    });
+
+    if(!user){
+        throw new BadRequestError("User does not exist or invalid user id");
+    }
+
+    user.password = undefined;
+
+    return user;
+
+}
 module.exports = {
     registerUser,
-    updateUserProfile
+    updateUserProfile,
+    fetchUserProfile
 }
