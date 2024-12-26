@@ -3,22 +3,28 @@ const ProductRepository = require('../repositories/productRepository');
 const fs = require('fs/promises');
 const InternalServerError = require('../utils/internalServerError');
 const NotFoundError = require('../utils/notFoundError');
+const path = require('path');
 
 async function createProduct(productDetails){
 
     // 1. We should check if an image is coming to createthe product, then we should first upload it on cloudinary 
 
     const imagePath = productDetails.imagePath;
-    console.log(imagePath);
     
     if(imagePath){
         try {
-            const cloudinaryResponse = await cloudinary.uploader.upload(imagePath);
+            const cloudinaryResponse = await cloudinary.uploader.upload(imagePath, {
+                folder: "pizza/products",
+            });
+            
             var productImage = cloudinaryResponse.secure_url;
-            console.log(productImage);
             await fs.unlink(process.cwd() + "/" + imagePath);
         } catch (error) {
             console.log(error);  
+            // Empty the uploads directory without deleting the uploads directory
+           for (const file of await fs.readdir('uploads/')) {
+           await fs.unlink(path.join('uploads/', file));
+          }
             throw new InternalServerError();
         }
     }

@@ -6,8 +6,8 @@ const { isLoggedIn, isAdmin } = require('../validation/authValidator');
 const productRouter = express.Router();
 
 productRouter.post('/', 
-    isLoggedIn,
-    isAdmin,
+    // isLoggedIn,
+    // isAdmin,
     uploader.single('productImage'),
     addProduct
     );

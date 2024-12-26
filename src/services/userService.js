@@ -1,5 +1,11 @@
-const { findUser, createUser } = require("../repositories/userRepository");
-const { createCart } = require('../repositories/cartRepository')
+const { findUser, createUser, findUserAndUpdate } = require("../repositories/userRepository");
+const { createCart } = require('../repositories/cartRepository');
+const BadRequestError = require("../utils/badRequestError");
+const cloudinary = require('../config/cloudinaryConfig');
+const fs = require('fs/promises');
+const path = require('path');
+const InternalServerError = require("../utils/internalServerError");
+
 
 async function registerUser(userDetails){
         
@@ -24,11 +30,15 @@ async function registerUser(userDetails){
             lastName: userDetails.lastName,
             mobileNumber: userDetails.mobileNumber,
             address: userDetails.address,
+            avatar: {
+                public_id: '',
+                secure_url: '',
+            },
         })
 
         // here we check whether the newUser is undefined or null
         if(!newUser){
-            throw {reason: 'Something wenr wrong, cannot create user', statusCode: 500};
+            throw {reason: 'Something went wrong, cannot create user', statusCode: 500};
         }
 
     
@@ -39,6 +49,53 @@ async function registerUser(userDetails){
 
 }
 
+async function updateUserProfile(userDetails, userId, image){
+
+    const user = await findUserAndUpdate(userDetails, userId);
+
+    if(!user){
+        throw new BadRequestError("User does not exist or invalid user id");
+    }
+
+    const imagePath = image?.path;
+    if(imagePath){
+        
+        try {
+            if(user?.avatar?.public_id) {
+                await cloudinary.uploader.destroy(user?.avatar?.public_id);
+            }
+            const cloudinaryResponse = await cloudinary.uploader.upload(imagePath, {
+                folder: 'pizza/users',
+                width: 250,
+                height: 250,
+                gravity: "faces",
+                crop: "fill",
+            });
+
+            if(cloudinaryResponse){
+                user.avatar.public_id = cloudinaryResponse.public_id;
+                user.avatar.secure_url = cloudinaryResponse.secure_url;
+            }
+
+            // Remove the file from server
+             await fs.unlink(process.cwd() + "/" + imagePath);
+        } catch (error) {
+            console.log(error);  
+            // Empty the uploads directory without deleting the uploads directory
+           for (const file of await fs.readdir('uploads/')) {
+           await fs.unlink(path.join('uploads/', file));
+          }
+            throw new InternalServerError();
+        }
+    }
+
+    await user.save();
+    user.password = undefined;
+
+    return user;
+}
+
 module.exports = {
     registerUser,
+    updateUserProfile
 }

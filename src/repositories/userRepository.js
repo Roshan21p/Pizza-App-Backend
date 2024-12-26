@@ -28,10 +28,33 @@ async function createUser(userDetails) {
         // console.log(error);
         throw new InternalServerError();
     }
-    
+}
+
+async function findUserAndUpdate(userData, userId){
+    try {
+        const response = await User.findByIdAndUpdate(userId,{
+            $set: userData,
+        },{
+            runValidators: true,
+            new: true,
+        });
+        return response;
+    } catch(error) {
+        if(error.name === 'ValidationError') {
+
+            const errorMessageList = Object.keys(error.errors).map((property) => {
+                return error.errors[property].message;
+            });
+            console.log(errorMessageList)
+            throw new BadRequestError(errorMessageList);
+        } 
+        // console.log(error);
+        throw new InternalServerError();
+    }
 }
 
 module.exports = {
     findUser,
-    createUser
+    createUser,
+    findUserAndUpdate,
 };
