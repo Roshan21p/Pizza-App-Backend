@@ -45,7 +45,7 @@ async function getProductById(productId) {
   const response = await ProductRepository.getProductById(productId);
 
   if (!response) {
-    throw new NotFoundError('Product');
+    throw new NotFoundError('Product not found');
   }
   return response;
 }
@@ -53,7 +53,7 @@ async function getProductById(productId) {
 async function getAllProductsData() {
   const response = await ProductRepository.getAllProducts();
   if (!response) {
-    throw new NotFoundError('Product');
+    throw new NotFoundError('Product not found');
   }
   return response;
 }
@@ -62,7 +62,7 @@ async function deleteProductById(productId) {
   const response = await ProductRepository.deleteProductById(productId);
 
   if (!response) {
-    throw new NotFoundError('Product');
+    throw new NotFoundError('Product not found');
   }
 
   return response;

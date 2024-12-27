@@ -10,6 +10,6 @@ const cartRouter = express.Router();
 
 cartRouter.get('/', isLoggedIn, getCartByUser);
 cartRouter.post('/:operation/:productId', isLoggedIn, modifyProductToCart);
-cartRouter.delete('/products', isLoggedIn, clearCartById);
+cartRouter.delete('/item/:itemId', isLoggedIn, clearCartById);
 
 module.exports = cartRouter;

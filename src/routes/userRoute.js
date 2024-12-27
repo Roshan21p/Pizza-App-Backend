@@ -13,6 +13,6 @@ const userRouter = express.Router();
 
 userRouter.post('/', createUser); // this is a route registration
 userRouter.put('/me', isLoggedIn, uploader.single('avatar'), updateProfile);
-userRouter.get('/', isLoggedIn, getProfile);
+userRouter.get('/getProfile', isLoggedIn, getProfile);
 
 module.exports = userRouter; // exporting the router

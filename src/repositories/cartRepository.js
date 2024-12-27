@@ -38,7 +38,7 @@ async function clearCart(userId) {
       user: userId
     });
     if (!cart) {
-      throw new NotFoundError('cart');
+      throw new NotFoundError('Not able to find cart');
     }
 
     cart.items = [];

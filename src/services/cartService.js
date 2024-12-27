@@ -1,9 +1,7 @@
 const {
   getCartByUserId,
-  clearCart
 } = require('../repositories/cartRepository');
 const { getProductById } = require('../repositories/productRepository');
-const AppError = require('../utils/appError');
 const BadRequestError = require('../utils/badRequestError');
 const NotFoundError = require('../utils/notFoundError');
 
@@ -11,7 +9,7 @@ async function getCart(userId) {
   const cart = await getCartByUserId(userId);
 
   if (!cart) {
-    throw new NotFoundError('Cart');
+    throw new NotFoundError('Not able to find Cart');
   }
   return cart;
 }
@@ -21,7 +19,7 @@ async function modifyCart(userId, productId, shouldAdd = true) {
   const cart = await getCart(userId);
   const product = await getProductById(productId);
   if (!product) {
-    throw new NotFoundError('Product');
+    throw new NotFoundError('Not able to find Product');
   }
   if (!product.inStock && product.quantity <= 0) {
     throw new BadRequestError(['Product not available in stock']);
@@ -33,13 +31,15 @@ async function modifyCart(userId, productId, shouldAdd = true) {
     console.log(item);
     if (item.product._id == productId) {
       if (shouldAdd) {
-        if (product.quantity >= item.quantity + 1)
+        if (product.quantity >= item.quantity + 1){
           item.quantity += quantityValue;
-        else
-          throw new AppError(
+        }
+        else{
+          throw new NotFoundError(
             'The quantity of the item rquested is not available',
             404
           );
+        }
       } else {
         if (item.quantity > 0) {
           item.quantity += quantityValue;
@@ -51,7 +51,7 @@ async function modifyCart(userId, productId, shouldAdd = true) {
             return;
           }
         } else
-          throw new AppError(
+          throw new NotFoundError(
             'The quantity of the item rquested is not available',
             404
           );
@@ -66,20 +66,39 @@ async function modifyCart(userId, productId, shouldAdd = true) {
         quantity: 1
       });
     } else {
-      throw new NotFoundError('Product in the cart');
+      throw new NotFoundError('Not able to find Product in the cart');
     }
   }
   await cart.save();
   return cart;
 }
 
-async function clearProductsFromCart(userId) {
-  const response = await clearCart(userId);
-  return response;
+async function clearItemFromCart(userId, itemId) {
+  const cart = await getCartByUserId(userId);
+  
+  if(!cart){
+    throw new NotFoundError("Cart not found for this user");
+  }
+  
+   // Filter out the item with the matching itemId
+   const updatedItems = cart.items.filter((item) => item._id != itemId );
+
+   
+   // Check if the item was found and removed
+   if (updatedItems.length === cart.items.length) {
+   throw new NotFoundError("Item not found in the cart");
+  }
+
+  // Update the cart's items and save it
+  cart.items = updatedItems;
+  await cart.save();
+
+  return cart;
+
 }
 
 module.exports = {
   getCart,
   modifyCart,
-  clearProductsFromCart
+  clearItemFromCart
 };

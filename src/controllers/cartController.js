@@ -1,7 +1,7 @@
 const {
   getCart,
   modifyCart,
-  clearProductsFromCart
+  clearItemFromCart
 } = require('../services/cartService');
 const AppError = require('../utils/appError');
 
@@ -27,7 +27,7 @@ async function getCartByUser(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       error: error,
       data: {}
     });
@@ -60,7 +60,7 @@ async function modifyProductToCart(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       error: error,
       data: {}
     });
@@ -69,10 +69,10 @@ async function modifyProductToCart(req, res) {
 
 async function clearCartById(req, res) {
   try {
-    const cart = await clearProductsFromCart(req.user.id);
+    const cart = await clearItemFromCart(req.user.id, req.params.itemId);
     return res.status(200).json({
       success: true,
-      message: 'Successfully clear all products from the cart',
+      message: 'Item removed from cart successfully',
       error: {},
       data: cart
     });
@@ -86,10 +86,9 @@ async function clearCartById(req, res) {
         data: {}
       });
     }
-
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       error: error,
       data: {}
     });

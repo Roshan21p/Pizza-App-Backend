@@ -18,7 +18,7 @@ async function createOrder(userId, paymentMethod) {
   const user = await findUser({ _id: cart.user });
 
   if (!cart) {
-    throw new NotFoundError('Cart');
+    throw new NotFoundError('Not able to find Cart');
   }
 
   if (!cart.items.length === 0) {
@@ -58,7 +58,7 @@ async function createOrder(userId, paymentMethod) {
 async function getAllOrdersCreateByUser(userId) {
   const orders = await getOrdersByUserId(userId);
   if (!orders) {
-    throw new NotFoundError('Orders');
+    throw new NotFoundError('Orders not found');
   }
   return orders;
 }
@@ -66,7 +66,7 @@ async function getAllOrdersCreateByUser(userId) {
 async function getOrderDetailsById(orderId) {
   const order = await getOrderById(orderId);
   if (!order) {
-    throw new NotFoundError('Order');
+    throw new NotFoundError('Order not found');
   }
   return order;
 }
@@ -74,7 +74,7 @@ async function getOrderDetailsById(orderId) {
 async function updateOrder(orderId, status) {
   const order = await updateOrderStatus(orderId, status);
   if (!order) {
-    throw new NotFoundError('Order');
+    throw new NotFoundError('Order not found');
   }
   return order;
 }
