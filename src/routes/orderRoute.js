@@ -1,5 +1,11 @@
 const express = require('express');
-const { createNewOrder, getAllOrdersByUser, getOrder, cancelOrder, changeOrderStatus } = require('../controllers/orderController.js');
+const {
+  createNewOrder,
+  getAllOrdersByUser,
+  getOrder,
+  cancelOrder,
+  changeOrderStatus
+} = require('../controllers/orderController.js');
 const { isLoggedIn, isAdmin } = require('../validation/authValidator.js');
 
 const orderRouter = express.Router();
