@@ -2,7 +2,8 @@ const {
   createProduct,
   getProductById,
   deleteProductById,
-  getAllProductsData
+  getAllProductsData,
+  updateProductById
 } = require('../services/productService');
 const AppError = require('../utils/appError');
 
@@ -23,6 +24,7 @@ async function addProduct(req, res) {
       data: product
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof AppError) {
       return res.status(error.statusCode).json({
         success: false,
@@ -31,10 +33,9 @@ async function addProduct(req, res) {
         error: error
       });
     }
-    console.log(error);
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       data: {},
       error: error
     });
@@ -62,7 +63,7 @@ async function getProduct(req, res) {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       data: {},
       error: error
     });
@@ -90,7 +91,7 @@ async function getProducts(req, res) {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       data: {},
       error: error
     });
@@ -118,16 +119,47 @@ async function deleteProduct(req, res) {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.reason,
       data: {},
       error: error
     });
   }
 }
 
+async function updateProduct(req, res) {
+  try {
+    const response = await updateProductById(req.body,req.params.id,req.file);
+    return res.status(200).json({
+      message: 'Successfully updated the product details',
+      success: true,
+      data: response,
+      error: {}
+    });
+  } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+        data: {},
+        error: error
+      });
+    }
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error.reason,
+      data: {},
+      error: error
+    });
+  }
+}
+
+
+
 module.exports = {
   addProduct,
   getProduct,
   deleteProduct,
-  getProducts
+  getProducts,
+  updateProduct
 };

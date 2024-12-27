@@ -20,8 +20,8 @@ async function createProduct(productDetails) {
 
 async function getProductById(productId) {
   try {
-    const product = await Product.findById(productId);
-    return product;
+    const response = await Product.findById(productId);
+    return response;
   } catch (error) {
     console.log(error);
     throw new InternalServerError();
@@ -30,28 +30,32 @@ async function getProductById(productId) {
 
 async function getAllProducts() {
   try {
-    const products = await Product.find({});
-    return products;
-  } catch (error) {
-    console.log(error);
-    throw new InternalServerError();
-  }
-}
-
-async function deleteProductById(productId) {
-  try {
-    const response = await Product.findByIdAndDelete(productId);
-    console.log(response);
-
+    const response = await Product.find({});
     return response;
   } catch (error) {
     console.log(error);
     throw new InternalServerError();
   }
 }
+
+async function findProductAndUpdate(productId, productDetails){
+  try {
+    const response = Product.findByIdAndUpdate(productId,{
+      $set: productDetails
+    },{
+      runValidators: true,
+      new: true
+    })
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw new InternalServerError();
+  }
+}
+
 module.exports = {
   createProduct,
   getProductById,
-  deleteProductById,
-  getAllProducts
+  getAllProducts,
+  findProductAndUpdate
 };
