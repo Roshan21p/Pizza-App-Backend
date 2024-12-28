@@ -10,6 +10,7 @@ const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
 const serverConfig = require('./config/serverConfig.js');
+const paymentRouter = require('./routes/paymentRoute.js');
 
 const app = express();
 app.use(
@@ -31,6 +32,7 @@ app.use('/carts', cartRouter);
 app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
+app.use('/payments', paymentRouter);
 
 app.get('/ping', (req, res) => {
   //controller

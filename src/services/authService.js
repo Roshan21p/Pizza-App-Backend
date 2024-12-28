@@ -27,11 +27,13 @@ async function loginUser(authDetails) {
     throw { message: 'No user found with the given email', statusCode: 404 };
   }
 
-  //2. If the user is found we need to compare plainIncomingPassword witrh hashedPassword
+  //2. If the user is found we need to compare plainIncomingPassword with hashedPassword
   const isPasswordValidated = await bcrypt.compare(
     plainPassword,
     user.password
   );
+
+  
 
   if (!isPasswordValidated) {
     throw { message: 'Invalid Password, please try again', statusCode: 401 };

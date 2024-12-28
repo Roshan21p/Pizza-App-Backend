@@ -15,5 +15,6 @@ module.exports = {
   SMTP_PORT: process.env.SMTP_PORT,
   SMTP_USERNAME: process.env.SMTP_USERNAME,
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-  SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL
+  SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL,
+  STRIPE_SECRET_KEY:process.env.STRIPE_SECRET_KEY
 };
