@@ -13,36 +13,48 @@ const BadRequestError = require('../utils/badRequestError');
 const InternalServerError = require('../utils/internalServerError');
 const NotFoundError = require('../utils/notFoundError');
 
-async function createOrder(userId, paymentMethod) {
+async function createOrder(userId, paymentMethod, newAddress) {
   const cart = await getCartByUserId(userId);
-  const user = await findUser({ _id: cart.user });
 
   if (!cart) {
     throw new NotFoundError('Not able to find Cart');
   }
 
-  if (!cart.items.length === 0) {
+  if (cart.items.length === 0) {
     throw new BadRequestError([
       'Cart is empty, please add some items to the cart'
     ]);
   }
 
-  const orderObject = {};
+  const user = await findUser({ _id: cart.user });
 
-  orderObject.user = cart.user;
-  orderObject.items = cart.items.map((cartItem) => {
-    return { product: cartItem.product._id, quantity: cartItem.quantity };
-  });
+  if(!user){
+    throw new NotFoundError("User not found");
+  }
 
-  orderObject.status = 'ORDERED';
-  orderObject.totalPrice = 0;
 
-  cart.items.forEach((cartItem) => {
-    orderObject.totalPrice += cartItem.quantity * cartItem.product.price;
-  });
+  if(!user.address || !compareAddresses(user.address, newAddress)){
+     // If the address is new, update the user's address
+     user.address = newAddress;
+ 
+     await user.save(); // Save the updated user address
+  }
 
-  orderObject.address = user.address;
-  orderObject.paymentMethod = paymentMethod;
+  const orderObject = {
+    user: cart.user,
+    items: cart.items.map((cartItem) => {
+      return {
+        product: cartItem.product._id,
+        quantity: cartItem.quantity,
+      };
+    }),
+    status: 'ORDERED',
+    totalPrice: cart.items.reduce((total, cartItem) => {
+      return total + cartItem.quantity * cartItem.product.price
+  },0),
+    address: newAddress,
+    payment: paymentMethod,
+  };
 
   const order = await createNewOrder(orderObject);
 
@@ -77,6 +89,19 @@ async function updateOrder(orderId, status) {
     throw new NotFoundError('Order not found');
   }
   return order;
+}
+
+function compareAddresses(address1, address2){
+  if(!address1 || !address2) return false;
+
+  return(
+    address1.flat === address2.flat &&
+    address1.area === address2.area &&
+    address1.landmark === address2.landmark &&
+    address1.pincode === address2.pincode &&
+    address1.city === address2.city &&
+    address1.state === address2.state
+  )
 }
 
 module.exports = {

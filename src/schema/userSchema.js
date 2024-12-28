@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
       }
     },
 
-    address: [
+    address: 
       {
         flat: {
           type: String,
@@ -91,8 +91,7 @@ const userSchema = new mongoose.Schema(
           type: String,
           trim: true
         }
-      }
-    ],
+      },
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date
   },

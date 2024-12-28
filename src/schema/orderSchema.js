@@ -41,8 +41,9 @@ const orderSchema = new mongoose.Schema(
     },
 
     address: {
-      type: String,
-      minLength: [10, 'Address should be of atleast 10 characters']
+      type: Object,
+      ref: 'User', // Referencing the user's address
+      required: true
     },
 
     payment: {
