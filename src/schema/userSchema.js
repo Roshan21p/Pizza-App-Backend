@@ -99,10 +99,16 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre('save', async function () {
+userSchema.pre('save', async function (next) {
+  // Only hash the password if it has been modified
+  if (!this.isModified('password')) {
+    return next();
+  }
+
   //here u can modify your user before it is saved in mongodb
   const hashPassword = await bcrypt.hash(this.password, 10);
   this.password = hashPassword;
+  next();
 });
 
 userSchema.methods = {

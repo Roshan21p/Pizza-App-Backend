@@ -1,4 +1,8 @@
-const {handleCheckoutSession, handlePaymentConfirmation} = require('../services/paymentService.js')
+const {
+  handleCheckoutSession,
+  handlePaymentConfirmation,
+  fetchAllPayments
+} = require('../services/paymentService.js');
 const AppError = require('../utils/appError');
 
 async function createCheckoutSession(req, res) {
@@ -32,7 +36,6 @@ async function createCheckoutSession(req, res) {
 }
 
 async function verifyPayment(req, res) {
-  
   try {
     const response = await handlePaymentConfirmation(req.body);
     return res.status(200).json({
@@ -61,7 +64,29 @@ async function verifyPayment(req, res) {
   }
 }
 
+async function allPayments(req, res) {
+  try {
+    const response = await fetchAllPayments();
+    return res.status(200).json({
+      success: true,
+      message: 'All Payments fetched successfully',
+      data: response,
+      error: {}
+    });
+  } catch (error) {
+    console.log(error);
+    
+    return res.status(500).json({
+      success: false,
+      message: error.reason,
+      error: error,
+      data: {}
+    });
+  }
+}
+
 module.exports = {
   createCheckoutSession,
-  verifyPayment
+  verifyPayment,
+  allPayments
 };

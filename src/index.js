@@ -2,20 +2,22 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-const ServerConfig = require('./config/serverConfig.js');
 const connectDB = require('./config/dbConfig.js');
 const userRouter = require('./routes/userRoute');
 const authRouter = require('./routes/authRoute');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
-const serverConfig = require('./config/serverConfig.js');
 const paymentRouter = require('./routes/paymentRoute.js');
+const {
+  FRONTEND_URL,
+  PORT,
+} = require('./config/serverConfig.js');
 
 const app = express();
 app.use(
   cors({
-    origin: serverConfig.FRONTEND_URL, // allow to server to accept request from different origin
+    origin: FRONTEND_URL, // allow to server to accept request from different origin
     credentials: true // allow session cookie from browser to pass through
   })
 );
@@ -41,7 +43,7 @@ app.get('/ping', (req, res) => {
   return res.json({ message: 'pong' });
 });
 
-app.listen(ServerConfig.PORT, async () => {
+app.listen(PORT, async () => {
   await connectDB();
-  console.log(`Server started at port ${ServerConfig.PORT}`);
+  console.log(`Server started at port ${PORT}`);
 });

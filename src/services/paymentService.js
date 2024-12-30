@@ -73,50 +73,105 @@ async function handleCheckoutSession(req) {
   return { session, totalAmount };
 }
 
-async function handlePaymentConfirmation({sessionId}){
-  console.log("Session", sessionId);
-  
-  if(!sessionId){
-    throw new BadRequestError("Session ID is required");
+async function handlePaymentConfirmation({ sessionId }) {
+  console.log('Session', sessionId);
+
+  if (!sessionId) {
+    throw new BadRequestError('Session ID is required');
   }
 
   // Step 1: Retrieve the Stripe session
-  const session = await stripe.checkout.sessions.retrieve(sessionId)
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-  console.log("session", session);
-  
-   // Step 2: Verify payment status
-   if(session.payment_status !== 'paid'){
-    throw new BadRequestError("Payment not verified")
-   }
+  console.log('session', session);
 
-   // Step 3: Create the order
-   const userId = session.metadata.userId;
-   const address = JSON.parse(session.metadata.address);
+  // Step 2: Verify payment status
+  if (session.payment_status !== 'paid') {
+    throw new BadRequestError('Payment not verified');
+  }
 
-   const order = await createOrder(userId, 'ONLINE', address);
+  // Step 3: Create the order
+  const userId = session.metadata.userId;
+  const address = JSON.parse(session.metadata.address);
 
-   //  Step 4: Store payment details
-   const paymentDetails = {
-      orderId: order._id,
-      paymentIntentId: session.payment_intent,
-      paymentMethod: session.payment_method_types[0],
-      paymentStatus: session.payment_status,
-      paymentAmount: session.amount_total / 100,    // convert paise to INR
-      currency: session.currency,
-   }
+  const order = await createOrder(userId, 'ONLINE', address);
 
-   const payment = await storePaymentDetails(paymentDetails);
+  //  Step 4: Store payment details
+  const paymentDetails = {
+    orderId: order._id,
+    paymentIntentId: session.payment_intent,
+    paymentMethod: session.payment_method_types[0],
+    paymentStatus: session.payment_status,
+    paymentAmount: session.amount_total / 100, // convert paise to INR
+    currency: session.currency
+  };
 
-   if(!payment){
+  const payment = await storePaymentDetails(paymentDetails);
+
+  if (!payment) {
     throw new InternalServerError();
-   };
+  }
+  return order;
+}
 
-   return order;
+async function fetchAllPayments() {
+  try {
+    monthlyCounts = [];
 
+    const allPayments = await stripe.paymentIntents.list({
+      limit: 100
+    });
+
+    allPayments.data.forEach((payment) => {
+      const paymentDate = new Date(payment.created * 1000); // Convert UNIX timestamp to Date
+      const monthInNumber = paymentDate.getMonth();
+
+      if (payment.status === 'succeeded') {
+        // Check if this month is already in the array
+        let monthFound = monthlyCounts.find(
+          (item) => item.monthInNumber === monthInNumber
+        );
+
+        if (monthFound) {
+          monthFound.count += 1;
+        } else {
+          monthlyCounts.push({ monthInNumber, count: 1 });
+        }
+      }
+    });
+    // Convert month numbers to month names (optional)
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    const monthlyPayments = monthlyCounts.map((item) => ({
+      month: monthNames[item.monthInNumber],
+      count: item.count
+    }));
+
+    return {
+      allPayments,
+      monthlyPayments
+    };
+  } catch (error) {
+    console.log(error);
+    throw new InternalServerError();
+  }
 }
 
 module.exports = {
-  handleCheckoutSession, 
-  handlePaymentConfirmation
+  handleCheckoutSession,
+  handlePaymentConfirmation,
+  fetchAllPayments
 };

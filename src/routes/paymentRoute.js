@@ -1,13 +1,15 @@
 const express = require('express');
 const {
   createCheckoutSession,
-  verifyPayment
+  verifyPayment,
+  allPayments
 } = require('../controllers/paymentController');
-const { isLoggedIn } = require('../validation/authValidator');
+const { isLoggedIn, isAdmin } = require('../validation/authValidator');
 
 const paymentRouter = express.Router();
 
 paymentRouter.post('/create-checkout', isLoggedIn, createCheckoutSession);
 paymentRouter.post('/verify-payment', isLoggedIn, verifyPayment);
+paymentRouter.get('/all-payments', isLoggedIn, isAdmin, allPayments);
 
 module.exports = paymentRouter;
