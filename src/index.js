@@ -9,10 +9,12 @@ const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
 const paymentRouter = require('./routes/paymentRoute.js');
+
 const {
   FRONTEND_URL,
   PORT,
 } = require('./config/serverConfig.js');
+const contactRouter = require('./routes/contactRoute.js');
 
 const app = express();
 app.use(
@@ -35,6 +37,7 @@ app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 app.use('/payments', paymentRouter);
+app.use('/contact', contactRouter);
 
 app.get('/ping', (req, res) => {
   //controller

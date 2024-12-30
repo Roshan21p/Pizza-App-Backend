@@ -5,7 +5,7 @@ const {
   Password_Change_Success_Template
 } = require('./emailTemplate');
 
-const sendResetPasswordUrl = async function (email, resetPasswordUrl, name) {
+async function sendResetPasswordUrl(email, resetPasswordUrl, name) {
   try {
     const emailContent = Reset_Password_Template.replaceAll(
       '{resetPasswordUrl}',
@@ -20,11 +20,11 @@ const sendResetPasswordUrl = async function (email, resetPasswordUrl, name) {
     });
   } catch (error) {
     console.log('Error:', error);
-    throw new Error('Failed to send email'); // Rethrow or handle as needed
+    throw new Error('Failed to send email');
   }
 };
 
-const sendPasswordChangeNotification = async function (email, name) {
+async function sendPasswordChangeNotification(email, name) {
   try {
     const emailContent = Password_Change_Success_Template.replace(
       '{name}',
@@ -39,11 +39,27 @@ const sendPasswordChangeNotification = async function (email, name) {
     });
   } catch (error) {
     console.log('Error:', error);
-    throw new Error('Failed to send email'); // Rethrow or handle as needed
+    throw new Error('Failed to send email');
+  }
+};
+
+async function generateContactUsEmail(recipientEmail, emailContent) {
+  try {
+    // Send the email with the provided content
+    await transporter.sendMail({
+      from: SMTP_FROM_EMAIL,
+      to: recipientEmail,
+      subject: 'Contact Us Form',
+      html: emailContent,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error('Failed to send email');
   }
 };
 
 module.exports = {
   sendResetPasswordUrl,
-  sendPasswordChangeNotification
+  sendPasswordChangeNotification,
+  generateContactUsEmail
 };
