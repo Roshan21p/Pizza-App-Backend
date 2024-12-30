@@ -16,7 +16,7 @@ async function isLoggedIn(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-   // console.log('Decoded', decoded, decoded.exp, Date.now() / 1000);
+    // console.log('Decoded', decoded, decoded.exp, Date.now() / 1000);
 
     if (!decoded) {
       throw new UnAuthorisedError();

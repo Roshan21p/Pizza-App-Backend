@@ -10,18 +10,17 @@ async function createProduct(productDetails) {
 
   const imagePath = productDetails.imagePath;
 
-  
   if (imagePath) {
     try {
       const cloudinaryResponse = await cloudinary.uploader.upload(imagePath, {
         folder: 'pizza/products'
-      });      
+      });
 
-      if(cloudinaryResponse){
+      if (cloudinaryResponse) {
         var public_id = cloudinaryResponse.public_id;
         var secure_url = cloudinaryResponse.secure_url;
       }
-      
+
       await fs.unlink(process.cwd() + '/' + imagePath);
     } catch (error) {
       console.log(error);
@@ -38,7 +37,7 @@ async function createProduct(productDetails) {
     ...productDetails,
     productImage: {
       public_id: public_id,
-      secure_url: secure_url,
+      secure_url: secure_url
     }
   });
 
@@ -75,47 +74,48 @@ async function deleteProductById(productId) {
 
   try {
     // Delete the productImage from cloudinary
-    if(product?.productImage?.public_id){
-      await cloudinary.uploader.destroy(product.productImage.public_id)
+    if (product?.productImage?.public_id) {
+      await cloudinary.uploader.destroy(product.productImage.public_id);
     }
   } catch (error) {
     console.log(error);
-    throw new InternalServerError("Failed to delete Product assets");
+    throw new InternalServerError('Failed to delete Product assets');
   }
 
   await product.deleteOne();
   return product;
 }
 
-async function updateProductById(productDetails, productId, image){
+async function updateProductById(productDetails, productId, image) {
+  const product = await ProductRepository.findProductAndUpdate(
+    productId,
+    productDetails
+  );
 
-  const product = await ProductRepository.findProductAndUpdate(productId, productDetails);
-
-  if(!product){
-    throw new NotFoundError("Invalid product id or product not found");
+  if (!product) {
+    throw new NotFoundError('Invalid product id or product not found');
   }
 
-  if(image){
+  if (image) {
     try {
-
-      if(product?.productImage?.public_id){
-        await cloudinary.uploader.destroy(product.productImage.public_id)
+      if (product?.productImage?.public_id) {
+        await cloudinary.uploader.destroy(product.productImage.public_id);
       }
 
-      const cloudinaryResponse = await cloudinary.uploader.upload(image?.path,{
+      const cloudinaryResponse = await cloudinary.uploader.upload(image?.path, {
         folder: 'pizza/products'
-      })
+      });
 
-      if(cloudinaryResponse){
+      if (cloudinaryResponse) {
         product.productImage.public_id = cloudinaryResponse.public_id;
         product.productImage.secure_url = cloudinaryResponse.secure_url;
       }
 
       await fs.unlink(process.cwd() + '/' + image?.path);
-    } catch (error) {      
+    } catch (error) {
       // Empty the uploads directory without deleting the uploads directory
-       for (const file of await fs.readdir('uploads/')) {
-         await fs.unlink(path.join('uploads/', file));
+      for (const file of await fs.readdir('uploads/')) {
+        await fs.unlink(path.join('uploads/', file));
       }
       throw new InternalServerError();
     }
@@ -124,7 +124,6 @@ async function updateProductById(productDetails, productId, image){
   await product.save();
 
   return product;
-
 }
 module.exports = {
   createProduct,

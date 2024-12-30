@@ -28,16 +28,15 @@ async function createOrder(userId, paymentMethod, newAddress) {
 
   const user = await findUser({ _id: cart.user });
 
-  if(!user){
-    throw new NotFoundError("User not found");
+  if (!user) {
+    throw new NotFoundError('User not found');
   }
 
+  if (!user.address || !compareAddresses(user.address, newAddress)) {
+    // If the address is new, update the user's address
+    user.address = newAddress;
 
-  if(!user.address || !compareAddresses(user.address, newAddress)){
-     // If the address is new, update the user's address
-     user.address = newAddress;
- 
-     await user.save(); // Save the updated user address
+    await user.save(); // Save the updated user address
   }
 
   const orderObject = {
@@ -45,15 +44,15 @@ async function createOrder(userId, paymentMethod, newAddress) {
     items: cart.items.map((cartItem) => {
       return {
         product: cartItem.product._id,
-        quantity: cartItem.quantity,
+        quantity: cartItem.quantity
       };
     }),
     status: 'ORDERED',
     totalPrice: cart.items.reduce((total, cartItem) => {
-      return total + cartItem.quantity * cartItem.product.price
-  },0),
+      return total + cartItem.quantity * cartItem.product.price;
+    }, 0),
     address: newAddress,
-    payment: paymentMethod,
+    payment: paymentMethod
   };
 
   const order = await createNewOrder(orderObject);
@@ -91,17 +90,17 @@ async function updateOrder(orderId, status) {
   return order;
 }
 
-function compareAddresses(address1, address2){
-  if(!address1 || !address2) return false;
+function compareAddresses(address1, address2) {
+  if (!address1 || !address2) return false;
 
-  return(
+  return (
     address1.flat === address2.flat &&
     address1.area === address2.area &&
     address1.landmark === address2.landmark &&
     address1.pincode === address2.pincode &&
     address1.city === address2.city &&
     address1.state === address2.state
-  )
+  );
 }
 
 module.exports = {

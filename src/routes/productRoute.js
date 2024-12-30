@@ -13,15 +13,21 @@ const productRouter = express.Router();
 
 productRouter.post(
   '/',
-   isLoggedIn,
-   isAdmin,
+  isLoggedIn,
+  isAdmin,
   uploader.single('productImage'),
   addProduct
 );
 
 productRouter.get('/:id', getProduct);
 productRouter.get('/', getProducts);
-productRouter.put('/:id',isLoggedIn,  isAdmin, uploader.single('productImage'), updateProduct);
-productRouter.delete('/:id',isLoggedIn, isAdmin, deleteProduct);
+productRouter.put(
+  '/:id',
+  isLoggedIn,
+  isAdmin,
+  uploader.single('productImage'),
+  updateProduct
+);
+productRouter.delete('/:id', isLoggedIn, isAdmin, deleteProduct);
 
 module.exports = productRouter;

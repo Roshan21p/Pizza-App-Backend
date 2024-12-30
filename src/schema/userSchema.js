@@ -65,33 +65,32 @@ const userSchema = new mongoose.Schema(
       }
     },
 
-    address: 
-      {
-        flat: {
-          type: String,
-          trim: true
-        },
-        area: {
-          type: String,
-          trim: true
-        },
-        landmark: {
-          type: String,
-          trim: true
-        },
-        pincode: {
-          type: String,
-          match: [/^\d{6}$/, 'Pincode must be a valid 6-digit number']
-        },
-        city: {
-          type: String,
-          trim: true
-        },
-        state: {
-          type: String,
-          trim: true
-        }
+    address: {
+      flat: {
+        type: String,
+        trim: true
       },
+      area: {
+        type: String,
+        trim: true
+      },
+      landmark: {
+        type: String,
+        trim: true
+      },
+      pincode: {
+        type: String,
+        match: [/^\d{6}$/, 'Pincode must be a valid 6-digit number']
+      },
+      city: {
+        type: String,
+        trim: true
+      },
+      state: {
+        type: String,
+        trim: true
+      }
+    },
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date
   },

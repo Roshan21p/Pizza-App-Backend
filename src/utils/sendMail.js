@@ -6,7 +6,6 @@ const {
 } = require('./emailTemplate');
 
 const sendResetPasswordUrl = async function (email, resetPasswordUrl, name) {
-
   try {
     const emailContent = Reset_Password_Template.replaceAll(
       '{resetPasswordUrl}',

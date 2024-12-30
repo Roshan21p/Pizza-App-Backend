@@ -42,7 +42,6 @@ const orderSchema = new mongoose.Schema(
 
     address: {
       type: Object,
-      ref: 'User', // Referencing the user's address
       required: true
     },
 

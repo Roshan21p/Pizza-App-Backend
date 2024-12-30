@@ -38,14 +38,18 @@ async function getAllProducts() {
   }
 }
 
-async function findProductAndUpdate(productId, productDetails){
+async function findProductAndUpdate(productId, productDetails) {
   try {
-    const response = Product.findByIdAndUpdate(productId,{
-      $set: productDetails
-    },{
-      runValidators: true,
-      new: true
-    })
+    const response = Product.findByIdAndUpdate(
+      productId,
+      {
+        $set: productDetails
+      },
+      {
+        runValidators: true,
+        new: true
+      }
+    );
     return response;
   } catch (error) {
     console.log(error);

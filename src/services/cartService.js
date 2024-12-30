@@ -1,6 +1,4 @@
-const {
-  getCartByUserId,
-} = require('../repositories/cartRepository');
+const { getCartByUserId } = require('../repositories/cartRepository');
 const { getProductById } = require('../repositories/productRepository');
 const BadRequestError = require('../utils/badRequestError');
 const NotFoundError = require('../utils/notFoundError');
@@ -31,10 +29,9 @@ async function modifyCart(userId, productId, shouldAdd = true) {
     console.log(item);
     if (item.product._id == productId) {
       if (shouldAdd) {
-        if (product.quantity >= item.quantity + 1){
+        if (product.quantity >= item.quantity + 1) {
           item.quantity += quantityValue;
-        }
-        else{
+        } else {
           throw new NotFoundError(
             'The quantity of the item rquested is not available',
             404
@@ -75,18 +72,17 @@ async function modifyCart(userId, productId, shouldAdd = true) {
 
 async function clearItemFromCart(userId, itemId) {
   const cart = await getCartByUserId(userId);
-  
-  if(!cart){
-    throw new NotFoundError("Cart not found for this user");
-  }
-  
-   // Filter out the item with the matching itemId
-   const updatedItems = cart.items.filter((item) => item._id != itemId );
 
-   
-   // Check if the item was found and removed
-   if (updatedItems.length === cart.items.length) {
-   throw new NotFoundError("Item not found in the cart");
+  if (!cart) {
+    throw new NotFoundError('Cart not found for this user');
+  }
+
+  // Filter out the item with the matching itemId
+  const updatedItems = cart.items.filter((item) => item._id != itemId);
+
+  // Check if the item was found and removed
+  if (updatedItems.length === cart.items.length) {
+    throw new NotFoundError('Item not found in the cart');
   }
 
   // Update the cart's items and save it
@@ -94,7 +90,6 @@ async function clearItemFromCart(userId, itemId) {
   await cart.save();
 
   return cart;
-
 }
 
 module.exports = {

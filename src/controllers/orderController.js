@@ -1,39 +1,9 @@
 const {
-  createOrder,
   getAllOrdersCreateByUser,
   getOrderDetailsById,
   updateOrder
 } = require('../services/orderService');
 const AppError = require('../utils/appError');
-
-async function createNewOrder(req, res) {
-  try {
-    const order = await createOrder(req.user.id, req.body.paymentMethod, req.body.address);
-    return res.status(201).json({
-      success: true,
-      message: 'Successfully created the order',
-      error: {},
-      data: order,
-    });
-  } catch (error) {
-    console.log(error);
-    if (error instanceof AppError) {
-      return res.status(error.statusCode).json({
-        success: false,
-        message: error.message,
-        error: error,
-        data: {}
-      });
-    }
-
-    return res.status(500).json({
-      success: false,
-      message: error.reason,
-      error: error,
-      data: {}
-    });
-  }
-}
 
 async function getAllOrdersByUser(req, res) {
   try {
@@ -152,7 +122,6 @@ async function changeOrderStatus(req, res) {
 }
 
 module.exports = {
-  createNewOrder,
   getAllOrdersByUser,
   getOrder,
   cancelOrder,

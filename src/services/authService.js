@@ -33,8 +33,6 @@ async function loginUser(authDetails) {
     user.password
   );
 
-  
-
   if (!isPasswordValidated) {
     throw { message: 'Invalid Password, please try again', statusCode: 401 };
   }

@@ -128,7 +128,7 @@ async function deleteProduct(req, res) {
 
 async function updateProduct(req, res) {
   try {
-    const response = await updateProductById(req.body,req.params.id,req.file);
+    const response = await updateProductById(req.body, req.params.id, req.file);
     return res.status(200).json({
       message: 'Successfully updated the product details',
       success: true,
@@ -153,8 +153,6 @@ async function updateProduct(req, res) {
     });
   }
 }
-
-
 
 module.exports = {
   addProduct,

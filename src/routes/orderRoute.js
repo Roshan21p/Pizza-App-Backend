@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  createNewOrder,
   getAllOrdersByUser,
   getOrder,
   cancelOrder,
@@ -10,7 +9,6 @@ const { isLoggedIn, isAdmin } = require('../validation/authValidator.js');
 
 const orderRouter = express.Router();
 
-orderRouter.post('/', isLoggedIn, createNewOrder);
 orderRouter.get('/', isLoggedIn, getAllOrdersByUser);
 orderRouter.get('/:orderId', isLoggedIn, getOrder);
 orderRouter.put('/:orderId/cancel', isLoggedIn, cancelOrder);
