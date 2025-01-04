@@ -37,7 +37,7 @@ app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 app.use('/payments', paymentRouter);
-app.use('/contact', contactRouter);
+app.use('/', contactRouter);
 
 app.get('/ping', (req, res) => {
   //controller

@@ -5,6 +5,7 @@ const storePaymentDetails = require('../repositories/paymentRepository');
 const BadRequestError = require('../utils/badRequestError');
 const InternalServerError = require('../utils/internalServerError');
 const NotFoundError = require('../utils/notFoundError');
+const { sendOrderConfirmationEmail } = require('../utils/sendMail');
 const { createOrder } = require('./orderService');
 
 async function handleCheckoutSession(req) {
@@ -64,7 +65,8 @@ async function handleCheckoutSession(req) {
     customer_email: req.user.email,
     metadata: {
       userId: userId,
-      address: JSON.stringify(address)
+      address: JSON.stringify(address),
+      lineItems: JSON.stringify(lineItems),
     }
   });
 
@@ -93,8 +95,10 @@ async function handlePaymentConfirmation({ sessionId }) {
   // Step 3: Create the order
   const userId = session.metadata.userId;
   const address = JSON.parse(session.metadata.address);
+  const lineItems = JSON.parse(session.metadata.lineItems);
+  console.log('lineItems', lineItems);
 
-  const order = await createOrder(userId, 'ONLINE', address);
+  const order = await createOrder(userId, 'CARD', address);
 
   //  Step 4: Store payment details
   const paymentDetails = {
@@ -111,6 +115,21 @@ async function handlePaymentConfirmation({ sessionId }) {
   if (!payment) {
     throw new InternalServerError();
   }
+
+  const emailSent = await sendOrderConfirmationEmail({
+    customerEmail: session.customer_email,
+    lineItems,
+    address,
+    orderId: order._id,
+    paymentAmount: paymentDetails.paymentAmount,
+    currency: paymentDetails.currency,
+  });
+
+  if (!emailSent) {
+    console.error('Failed to send confirmation email.');
+    throw new InternalServerError('Failed to send confirmation email');
+  }
+
   return order;
 }
 

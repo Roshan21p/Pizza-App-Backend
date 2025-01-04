@@ -50,7 +50,16 @@ async function findUserAndUpdate(userData, userId) {
       console.log(errorMessageList);
       throw new BadRequestError(errorMessageList);
     }
-    // console.log(error);
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      // Extracting duplicate key details
+      const duplicateKey = Object.keys(error.keyPattern)[0];
+      const duplicateValue = error.keyValue[duplicateKey];
+      const errorMessage = `${duplicateKey} with value "${duplicateValue}" already exists.`;
+  
+      console.log('Duplicate Key Error:', errorMessage);
+  
+      throw new BadRequestError(errorMessage);
+    }
     throw new InternalServerError();
   }
 }

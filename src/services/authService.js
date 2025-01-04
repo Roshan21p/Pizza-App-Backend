@@ -48,13 +48,19 @@ async function loginUser(authDetails) {
     }
   );
 
+  user.password = undefined;
+
   return {
     token,
     userRole,
     userData: {
       email: user.email,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
+      role: user.role,
+      mobileNumber: user.mobileNumber,
+      avatar: user?.avatar?.secure_url,
+      address: user?.address
     }
   };
 }

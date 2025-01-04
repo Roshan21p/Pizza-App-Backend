@@ -56,12 +56,15 @@ async function registerUser(userDetails) {
 async function updateUserProfile(userDetails, userId, image) {
   const user = await findUserAndUpdate(userDetails, userId);
 
+  
   if (!user) {
     throw new BadRequestError('User does not exist or invalid user id');
   }
 
-  const imagePath = image?.path;
+  let imagePath = image?.path;
+  
   if (imagePath) {
+    
     try {
       if (user?.avatar?.public_id) {
         await cloudinary.uploader.destroy(user?.avatar?.public_id);
@@ -108,7 +111,17 @@ async function fetchUserProfile(userId) {
 
   user.password = undefined;
 
-  return user;
+  return {
+    userData: {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      mobileNumber: user.mobileNumber,
+      avatar: user?.avatar?.secure_url,
+      address: user?.address
+    }
+  };
 }
 module.exports = {
   registerUser,
