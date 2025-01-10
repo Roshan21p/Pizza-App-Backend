@@ -40,7 +40,7 @@ async function verifyPayment(req, res) {
     const response = await handlePaymentConfirmation(req.body);
     return res.status(200).json({
       success: true,
-      message: 'Order created successfully',
+      message: 'Payment verified and order created successfully',
       data: response,
       error: {}
     });

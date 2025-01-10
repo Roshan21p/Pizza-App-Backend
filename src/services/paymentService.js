@@ -43,7 +43,7 @@ async function handleCheckoutSession(req) {
     price_data: {
       currency: 'inr',
       product_data: {
-        name: item.product.productName
+        name: item?.product?.productName,
       },
       unit_amount: Math.round(item.product.price * 100)
     },
@@ -60,8 +60,7 @@ async function handleCheckoutSession(req) {
     payment_method_types: ['card'],
     mode: 'payment',
     line_items: lineItems,
-    success_url: `${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+    success_url: `${FRONTEND_URL}/payment-verification?session_id={CHECKOUT_SESSION_ID}`,
     customer_email: req.user.email,
     metadata: {
       userId: userId,
@@ -75,15 +74,15 @@ async function handleCheckoutSession(req) {
   return { session, totalAmount };
 }
 
-async function handlePaymentConfirmation({ sessionId }) {
-  console.log('Session', sessionId);
+async function handlePaymentConfirmation({ session_id }) {
+  console.log('Session', session_id);
 
-  if (!sessionId) {
+  if (!session_id) {
     throw new BadRequestError('Session ID is required');
   }
 
   // Step 1: Retrieve the Stripe session
-  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  const session = await stripe.checkout.sessions.retrieve(session_id);
 
   console.log('session', session);
 
@@ -116,7 +115,7 @@ async function handlePaymentConfirmation({ sessionId }) {
     throw new InternalServerError();
   }
 
-  const emailSent = await sendOrderConfirmationEmail({
+  await sendOrderConfirmationEmail({
     customerEmail: session.customer_email,
     lineItems,
     address,
@@ -125,12 +124,12 @@ async function handlePaymentConfirmation({ sessionId }) {
     currency: paymentDetails.currency,
   });
 
-  if (!emailSent) {
-    console.error('Failed to send confirmation email.');
-    throw new InternalServerError('Failed to send confirmation email');
-  }
-
-  return order;
+  return {
+    orderId: order._id,
+    totalPrice: order.totalPrice,
+    items: lineItems,
+    address: order.address,
+}
 }
 
 async function fetchAllPayments() {
@@ -193,4 +192,4 @@ module.exports = {
   handleCheckoutSession,
   handlePaymentConfirmation,
   fetchAllPayments
-};
+}

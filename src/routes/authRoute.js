@@ -12,6 +12,6 @@ const authRouter = express.Router();
 
 authRouter.post('/login', login); // this is a route registration
 authRouter.post('/logout', logout);
-authRouter.post('/forgot_Password', forgotPassword);
-authRouter.post('/reset_Password/:resetToken', resetPassword);
+authRouter.post('/forgot-Password', forgotPassword);
+authRouter.post('/reset-password/:resetToken', resetPassword);
 module.exports = authRouter; // exporting the router

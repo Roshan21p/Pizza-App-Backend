@@ -79,7 +79,7 @@ async function processForgotPassword(email) {
   // Generating the reset token
   const resetToken = await user.generatePasswordResetToken();
 
-  const resetPasswordUrl = `${FRONTEND_URL}/reset_Password/${resetToken}`;
+  const resetPasswordUrl = `${FRONTEND_URL}/auth/reset-password/${resetToken}`;
 
   try {
     await sendResetPasswordUrl(
