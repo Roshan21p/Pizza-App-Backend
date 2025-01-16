@@ -62,6 +62,7 @@ async function updateUserProfile(userDetails, userId, image) {
   }
 
   let imagePath = image?.path;
+  console.log('Image path in service:', image?.path);
   
   if (imagePath) {
     
@@ -78,18 +79,19 @@ async function updateUserProfile(userDetails, userId, image) {
       });
 
       if (cloudinaryResponse) {
+        user.avatar = user.avatar || {};
         user.avatar.public_id = cloudinaryResponse.public_id;
         user.avatar.secure_url = cloudinaryResponse.secure_url;
       }
 
       // Remove the file from server
-      await fs.unlink(process.cwd() + '/' + imagePath);
+        await fs.unlink(process.cwd() + '/'  + imagePath);
     } catch (error) {
       console.log(error);
       // Empty the uploads directory without deleting the uploads directory
-      for (const file of await fs.readdir('uploads/')) {
-        await fs.unlink(path.join('uploads/', file));
-      }
+        for (const file of await fs.readdir('uploads/')) {
+          await fs.unlink(path.join('uploads/', file));
+        }
       throw new InternalServerError();
     }
   }

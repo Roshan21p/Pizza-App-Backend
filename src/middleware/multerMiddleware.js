@@ -2,7 +2,9 @@ const multer = require('multer');
 const path = require('path');
 
 const storageConfiguration = multer.diskStorage({
-  destination: (req, file, next) => {
+  dest: 'uploads/',
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB file size limit
+  destination: (_req, file, next) => {
     next(null, 'uploads/');
   },
   filename: (req, file, next) => {

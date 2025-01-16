@@ -111,7 +111,7 @@ async function sendOrderConfirmationEmail({ customerEmail, lineItems, address, o
         lineItems
           .map(item => `
             <tr>
-                <td>${item.price_data.product_data.name}</td> <!-- Correctly accessing product name -->
+                <td>${item.price_data.product_data.name}</td> 
                 <td>${item.quantity}</td>
                 <td>${(item.price_data.unit_amount / 100).toFixed(2)} ${currency.toUpperCase()}</td>
             </tr>
