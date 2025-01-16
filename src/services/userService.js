@@ -78,6 +78,8 @@ async function updateUserProfile(userDetails, userId, image) {
         crop: 'fill'
       });
 
+      console.log('cloudinaryResponse',cloudinaryResponse);
+      
       if (cloudinaryResponse) {
         user.avatar = user.avatar || {};
         user.avatar.public_id = cloudinaryResponse.public_id;
@@ -85,7 +87,7 @@ async function updateUserProfile(userDetails, userId, image) {
       }
 
       // Remove the file from server
-        await fs.unlink(process.cwd() + '/'  + imagePath);
+        await fs.unlink(`uploads/${imagePath}`);
     } catch (error) {
       console.log(error);
       // Empty the uploads directory without deleting the uploads directory
