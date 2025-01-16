@@ -56,16 +56,14 @@ async function registerUser(userDetails) {
 async function updateUserProfile(userDetails, userId, image) {
   const user = await findUserAndUpdate(userDetails, userId);
 
-  
   if (!user) {
     throw new BadRequestError('User does not exist or invalid user id');
   }
 
   let imagePath = image?.path;
   console.log('Image path in service:', image?.path);
-  
+
   if (imagePath) {
-    
     try {
       if (user?.avatar?.public_id) {
         await cloudinary.uploader.destroy(user?.avatar?.public_id);
@@ -78,8 +76,8 @@ async function updateUserProfile(userDetails, userId, image) {
         crop: 'fill'
       });
 
-      console.log('cloudinaryResponse',cloudinaryResponse);
-      
+      console.log('cloudinaryResponse', cloudinaryResponse);
+
       if (cloudinaryResponse) {
         user.avatar = user.avatar || {};
         user.avatar.public_id = cloudinaryResponse.public_id;
@@ -87,13 +85,13 @@ async function updateUserProfile(userDetails, userId, image) {
       }
 
       // Remove the file from server
-        await fs.unlink(`uploads/${imagePath}`);
-    } catch (error) {
+      await fs.unlink(process.cwd() + '/'  + imagePath);
+      } catch (error) {
       console.log(error);
       // Empty the uploads directory without deleting the uploads directory
-        for (const file of await fs.readdir('uploads/')) {
-          await fs.unlink(path.join('uploads/', file));
-        }
+      for (const file of await fs.readdir('uploads/')) {
+        await fs.unlink(path.join('uploads/', file));
+      }
       throw new InternalServerError();
     }
   }

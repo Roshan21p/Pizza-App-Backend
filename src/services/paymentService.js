@@ -43,7 +43,7 @@ async function handleCheckoutSession(req) {
     price_data: {
       currency: 'inr',
       product_data: {
-        name: item?.product?.productName,
+        name: item?.product?.productName
       },
       unit_amount: Math.round(item.product.price * 100)
     },
@@ -65,7 +65,7 @@ async function handleCheckoutSession(req) {
     metadata: {
       userId: userId,
       address: JSON.stringify(address),
-      lineItems: JSON.stringify(lineItems),
+      lineItems: JSON.stringify(lineItems)
     }
   });
 
@@ -121,15 +121,15 @@ async function handlePaymentConfirmation({ session_id }) {
     address,
     orderId: order._id,
     paymentAmount: paymentDetails.paymentAmount,
-    currency: paymentDetails.currency,
+    currency: paymentDetails.currency
   });
 
   return {
     orderId: order._id,
     totalPrice: order.totalPrice,
     items: lineItems,
-    address: order.address,
-}
+    address: order.address
+  };
 }
 
 async function fetchAllPayments() {
@@ -192,4 +192,4 @@ module.exports = {
   handleCheckoutSession,
   handlePaymentConfirmation,
   fetchAllPayments
-}
+};

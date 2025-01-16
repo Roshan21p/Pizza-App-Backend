@@ -63,7 +63,9 @@ const orderSchema = new mongoose.Schema(
 
 // Pre-save hook to format and store the date in createdAtFormatted
 orderSchema.pre('save', function (next) {
-  this.createdAtFormatted = moment(this.createdAt).format('DD-MM-YYYY HH:mm:ss');
+  this.createdAtFormatted = moment(this.createdAt).format(
+    'DD-MM-YYYY HH:mm:ss'
+  );
   next();
 });
 

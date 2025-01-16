@@ -1,5 +1,5 @@
-import multer from 'multer';
-import path from 'path';
+const multer = require('multer');
+const path = require('path');
 
 const uploader = multer({
   dest: 'uploads/',
@@ -7,7 +7,7 @@ const uploader = multer({
   storage: multer.diskStorage({
     destination: 'uploads/',
     filename: (_req, file, next) => {
-      next(null, file.originalname);
+      next(null, `${Date.now()}${path.extname(file.originalname)}`);
     }
   }),
   fileFilter: (_req, file, next) => {
@@ -28,4 +28,4 @@ const uploader = multer({
   }
 });
 
-export default uploader;
+module.exports = uploader;

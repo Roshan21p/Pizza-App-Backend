@@ -23,7 +23,7 @@ async function sendResetPasswordUrl(email, resetPasswordUrl, name) {
     console.log('Error:', error);
     throw new Error('Failed to send email');
   }
-};
+}
 
 async function sendPasswordChangeNotification(email, name) {
   try {
@@ -42,7 +42,7 @@ async function sendPasswordChangeNotification(email, name) {
     console.log('Error:', error);
     throw new Error('Failed to send email');
   }
-};
+}
 
 async function generateContactUsEmail(recipientEmail, emailContent) {
   try {
@@ -51,13 +51,13 @@ async function generateContactUsEmail(recipientEmail, emailContent) {
       from: SMTP_FROM_EMAIL,
       to: recipientEmail,
       subject: 'Contact Us Form',
-      html: emailContent,
+      html: emailContent
     });
   } catch (error) {
     console.log(error);
     throw new Error('Failed to send email');
   }
-};
+}
 
 // async function sendOrderConfirmationEmail({ customerEmail, lineItems, address, orderId, paymentAmount, currency }) {
 //   try {
@@ -100,25 +100,36 @@ async function generateContactUsEmail(recipientEmail, emailContent) {
 //   }
 // }
 
-async function sendOrderConfirmationEmail({ customerEmail, lineItems, address, orderId, paymentAmount, currency }) {
+async function sendOrderConfirmationEmail({
+  customerEmail,
+  lineItems,
+  address,
+  orderId,
+  paymentAmount,
+  currency
+}) {
   try {
     // Generate the email content using the dynamic template
-    const emailContent = Order_Confirmation_Template
-      .replace('{name}', customerEmail.split('@')[0]) // Use the part before @ as the name (optional)
+    const emailContent = Order_Confirmation_Template.replace(
+      '{name}',
+      customerEmail.split('@')[0]
+    ) // Use the part before @ as the name (optional)
       .replace('{orderId}', orderId)
       .replace(
         '{lineItems}',
         lineItems
-          .map(item => `
+          .map(
+            (item) => `
             <tr>
                 <td>${item.price_data.product_data.name}</td> 
                 <td>${item.quantity}</td>
                 <td>${(item.price_data.unit_amount / 100).toFixed(2)} ${currency.toUpperCase()}</td>
             </tr>
-          `)
+          `
+          )
           .join('')
       )
-      .replace('{orderTotal}', (paymentAmount).toFixed(2)) // Ensure total is in proper format
+      .replace('{orderTotal}', paymentAmount.toFixed(2)) // Ensure total is in proper format
       .replace('{currency}', currency.toUpperCase())
       .replace(
         '{address}',
@@ -130,7 +141,7 @@ async function sendOrderConfirmationEmail({ customerEmail, lineItems, address, o
       from: process.env.SMTP_FROM_EMAIL,
       to: customerEmail,
       subject: 'Order Confirmation - Your Order with Pizzify',
-      html: emailContent,
+      html: emailContent
     });
 
     console.log('Order confirmation email sent successfully!');
@@ -139,8 +150,6 @@ async function sendOrderConfirmationEmail({ customerEmail, lineItems, address, o
     throw new Error('Failed to send email');
   }
 }
-
-
 
 module.exports = {
   sendResetPasswordUrl,

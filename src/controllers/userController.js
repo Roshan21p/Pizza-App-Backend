@@ -41,7 +41,7 @@ async function updateProfile(req, res) {
       data: response,
       error: {}
     });
-  } catch (error) {    
+  } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).json({
         success: false,
@@ -69,8 +69,8 @@ async function getProfile(req, res) {
       error: {}
     });
   } catch (error) {
-    console.log("con",error);
-    
+    console.log('con', error);
+
     if (error instanceof AppError) {
       return res.status(error.statusCode).json({
         success: false,

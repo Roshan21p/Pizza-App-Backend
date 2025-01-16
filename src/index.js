@@ -10,10 +10,7 @@ const cartRouter = require('./routes/cartRoute');
 const orderRouter = require('./routes/orderRoute');
 const paymentRouter = require('./routes/paymentRoute.js');
 
-const {
-  FRONTEND_URL,
-  PORT,
-} = require('./config/serverConfig.js');
+const { FRONTEND_URL, PORT } = require('./config/serverConfig.js');
 const contactRouter = require('./routes/contactRoute.js');
 
 const app = express();

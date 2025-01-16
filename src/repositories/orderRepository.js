@@ -38,7 +38,6 @@ async function getOrderById(orderId) {
   }
 }
 
-
 async function updateOrderStatus(orderId, status) {
   try {
     const order = await Order.findByIdAndUpdate(

@@ -55,9 +55,9 @@ async function findUserAndUpdate(userData, userId) {
       const duplicateKey = Object.keys(error.keyPattern)[0];
       const duplicateValue = error.keyValue[duplicateKey];
       const errorMessage = `${duplicateKey} with value "${duplicateValue}" already exists.`;
-  
+
       console.log('Duplicate Key Error:', errorMessage);
-  
+
       throw new BadRequestError(errorMessage);
     }
     throw new InternalServerError();
