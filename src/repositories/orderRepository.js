@@ -20,7 +20,9 @@ async function createNewOrder(orderDetails) {
 
 async function getOrdersByUserId(userId) {
   try {
-    const orders = await Order.find({ user: userId }).populate('items.product');
+    const orders = await Order.find({ 
+      user: userId 
+    }).populate('items.product').sort({ createdAt: -1});
     return orders;
   } catch (error) {
     console.log(error);
@@ -30,8 +32,18 @@ async function getOrdersByUserId(userId) {
 
 async function getOrderById(orderId) {
   try {
-    const order = await Order.findById(orderId).populate('items.product');
+    const order = await Order.findById(orderId).populate('items.product'); 
     return order;
+  } catch (error) {
+    console.log(error);
+    throw new InternalServerError();
+  }
+}
+
+async function fetchAllOrders() {
+  try {
+    const response = await Order.find({}).sort({ createdAt: -1 });
+    return response;
   } catch (error) {
     console.log(error);
     throw new InternalServerError();
@@ -55,6 +67,7 @@ async function updateOrderStatus(orderId, status) {
 module.exports = {
   createNewOrder,
   getOrdersByUserId,
+  fetchAllOrders,
   getOrderById,
   updateOrderStatus
 };

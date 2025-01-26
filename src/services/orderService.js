@@ -6,7 +6,8 @@ const {
   createNewOrder,
   getOrdersByUserId,
   getOrderById,
-  updateOrderStatus
+  updateOrderStatus,
+  fetchAllOrders
 } = require('../repositories/orderRepository');
 const { findUser } = require('../repositories/userRepository');
 const BadRequestError = require('../utils/badRequestError');
@@ -74,6 +75,15 @@ async function getAllOrdersCreateByUser(userId) {
   return orders;
 }
 
+async function getOrders() {
+  const orders = await fetchAllOrders();
+
+  if (!orders) {
+    throw new NotFoundError('Orders not found');
+  }
+  return orders;
+}
+
 async function getOrderDetailsById(orderId) {
   const order = await getOrderById(orderId);
   if (!order) {
@@ -106,6 +116,7 @@ function compareAddresses(address1, address2) {
 module.exports = {
   createOrder,
   getAllOrdersCreateByUser,
+  getOrders,
   getOrderDetailsById,
   updateOrder
 };

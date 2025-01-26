@@ -85,8 +85,8 @@ async function updateUserProfile(userDetails, userId, image) {
       }
 
       // Remove the file from server
-      await fs.unlink(process.cwd() + '/'  + imagePath);
-      } catch (error) {
+      await fs.unlink(process.cwd() + '/' + imagePath);
+    } catch (error) {
       console.log(error);
       // Empty the uploads directory without deleting the uploads directory
       for (const file of await fs.readdir('uploads/')) {

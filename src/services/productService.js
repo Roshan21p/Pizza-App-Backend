@@ -113,6 +113,8 @@ async function updateProductById(productDetails, productId, image) {
 
       await fs.unlink(process.cwd() + '/' + image?.path);
     } catch (error) {
+      console.log('service', error);
+
       // Empty the uploads directory without deleting the uploads directory
       for (const file of await fs.readdir('uploads/')) {
         await fs.unlink(path.join('uploads/', file));
