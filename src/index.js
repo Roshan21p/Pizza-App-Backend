@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const morgan = require('morgan');
 
 const connectDB = require('./config/dbConfig.js');
 const userRouter = require('./routes/userRoute');
@@ -26,6 +27,8 @@ app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(morgan('dev'));
+
 // Routing middleware
 // If your req route starts with /users then handle it using userRouter
 app.use('/users', userRouter); // connects the router to the server
@@ -39,7 +42,6 @@ app.use('/', contactRouter);
 app.get('/ping', (req, res) => {
   //controller
   console.log(req.body);
-  console.log(req.cookies);
   return res.json({ message: 'pong' });
 });
 

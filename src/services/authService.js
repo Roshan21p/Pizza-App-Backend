@@ -20,6 +20,8 @@ async function loginUser(authDetails) {
   const email = authDetails.email;
   const plainPassword = authDetails.password;
 
+  console.log('email', email);
+
   //1. Check if there is a registered user with the given email
   const user = await findUser({ email });
 

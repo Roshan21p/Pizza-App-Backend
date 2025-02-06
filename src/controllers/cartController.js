@@ -43,7 +43,7 @@ async function modifyProductToCart(req, res) {
     );
     return res.status(200).json({
       success: true,
-      message: 'Successfully added product the cart',
+      message: 'Successfully added product to the cart',
       error: {},
       data: cart
     });

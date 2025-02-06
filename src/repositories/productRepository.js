@@ -21,7 +21,7 @@ async function createProduct(productDetails) {
 async function getProductById(productId) {
   try {
     const response = await Product.findById(productId);
-    
+
     return response;
   } catch (error) {
     console.log(error);

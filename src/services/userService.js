@@ -41,6 +41,8 @@ async function registerUser(userDetails) {
     }
   });
 
+  console.log('name', userDetails.firstName, userDetails.lastName);
+
   // here we check whether the newUser is undefined or null
   if (!newUser) {
     throw new InternalServerError('Something went wrong, cannot create user');

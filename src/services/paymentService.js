@@ -11,7 +11,6 @@ const { createOrder } = require('./orderService');
 async function handleCheckoutSession(req) {
   const userId = req.user.id;
   const { paymentMethod, address } = req.body;
-  console.log('address', address);
 
   if (
     !address ||
@@ -69,13 +68,10 @@ async function handleCheckoutSession(req) {
     }
   });
 
-  console.log('session', session);
-
   return { session, totalAmount };
 }
 
 async function handlePaymentConfirmation({ session_id }) {
-  console.log('Session', session_id);
 
   if (!session_id) {
     throw new BadRequestError('Session ID is required');
@@ -84,7 +80,6 @@ async function handlePaymentConfirmation({ session_id }) {
   // Step 1: Retrieve the Stripe session
   const session = await stripe.checkout.sessions.retrieve(session_id);
 
-  console.log('session', session);
 
   // Step 2: Verify payment status
   if (session.payment_status !== 'paid') {
@@ -134,7 +129,13 @@ async function handlePaymentConfirmation({ session_id }) {
 
 async function fetchAllPayments() {
   try {
-    monthlyCounts = [];
+    // Initialize an array with all months in order
+    let monthlyCounts = Array.from({ length: 12 }, (_, index) => ({
+      monthInNumber: index,
+      count: 0,
+      amount: 0
+    }));
+    let totalAmount = 0;
 
     const allPayments = await stripe.paymentIntents.list({
       limit: 100
@@ -145,16 +146,10 @@ async function fetchAllPayments() {
       const monthInNumber = paymentDate.getMonth();
 
       if (payment.status === 'succeeded') {
-        // Check if this month is already in the array
-        let monthFound = monthlyCounts.find(
-          (item) => item.monthInNumber === monthInNumber
-        );
+        totalAmount += payment.amount_received / 100;
 
-        if (monthFound) {
-          monthFound.count += 1;
-        } else {
-          monthlyCounts.push({ monthInNumber, count: 1 });
-        }
+        monthlyCounts[monthInNumber].count += 1;
+        monthlyCounts[monthInNumber].amount += payment.amount_received / 100;
       }
     });
     // Convert month numbers to month names (optional)
@@ -173,14 +168,17 @@ async function fetchAllPayments() {
       'December'
     ];
 
-    const monthlyPayments = monthlyCounts.map((item) => ({
-      month: monthNames[item.monthInNumber],
-      count: item.count
-    }));
+    let monthlyPayments = {};
+    monthlyCounts.forEach((item) => {
+      monthlyPayments[monthNames[item.monthInNumber]] = {
+        count: item.count,
+        amount: item.amount
+      };
+    });
 
     return {
-      allPayments,
-      monthlyPayments
+      monthlyPayments,
+      totalAmount
     };
   } catch (error) {
     console.log(error);
