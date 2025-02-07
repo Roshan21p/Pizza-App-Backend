@@ -66,7 +66,7 @@ async function verifyPayment(req, res) {
 
 async function allPayments(req, res) {
   try {
-    const response = await fetchAllPayments();
+    const response = await fetchAllPayments(req);
     return res.status(200).json({
       success: true,
       message: 'All Payments fetched successfully',

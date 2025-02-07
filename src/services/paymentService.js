@@ -127,8 +127,10 @@ async function handlePaymentConfirmation({ session_id }) {
   };
 }
 
-async function fetchAllPayments() {
+async function fetchAllPayments(req) {
   try {
+    const {startDate, endDate} = req.query;    
+    
     // Initialize an array with all months in order
     let monthlyCounts = Array.from({ length: 12 }, (_, index) => ({
       monthInNumber: index,
@@ -137,6 +139,10 @@ async function fetchAllPayments() {
     }));
     let totalAmount = 0;
 
+    // convert input dates to timestamps (seconds in UNIX)
+    const startTimeStamp = new Date(startDate).getTime() / 1000;
+    const endTimeStamp = new Date(endDate).getTime() / 1000;
+
     const allPayments = await stripe.paymentIntents.list({
       limit: 100
     });
@@ -144,14 +150,18 @@ async function fetchAllPayments() {
     allPayments.data.forEach((payment) => {
       const paymentDate = new Date(payment.created * 1000); // Convert UNIX timestamp to Date
       const monthInNumber = paymentDate.getMonth();
+      const paymentTimeStamp = payment.created;
 
-      if (payment.status === 'succeeded') {
-        totalAmount += payment.amount_received / 100;
-
-        monthlyCounts[monthInNumber].count += 1;
-        monthlyCounts[monthInNumber].amount += payment.amount_received / 100;
+      if(paymentTimeStamp >= startTimeStamp && paymentTimeStamp <= endTimeStamp){
+        if (payment.status === 'succeeded') {
+          totalAmount += payment.amount_received / 100;
+  
+          monthlyCounts[monthInNumber].count += 1;
+          monthlyCounts[monthInNumber].amount += payment.amount_received / 100;
+        }
       }
     });
+     
     // Convert month numbers to month names (optional)
     const monthNames = [
       'January',
