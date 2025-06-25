@@ -108,7 +108,13 @@ async function sendOrderConfirmationEmail({
   paymentAmount,
   currency
 }) {
-  try {
+  console.log( customerEmail,
+  lineItems,
+  address,
+  orderId,
+  paymentAmount,
+  currency);
+  
     // Generate the email content using the dynamic template
     const emailContent = Order_Confirmation_Template.replace(
       '{name}',
@@ -145,10 +151,7 @@ async function sendOrderConfirmationEmail({
     });
 
     console.log('Order confirmation email sent successfully!');
-  } catch (error) {
-    console.error('Error sending order confirmation email:', error.message);
-    throw new Error('Failed to send email');
-  }
+ 
 }
 
 module.exports = {

@@ -68,6 +68,9 @@ async function handleCheckoutSession(req) {
     }
   });
 
+  console.log("session",session);
+  
+
   return { session, totalAmount };
 }
 
@@ -86,6 +89,8 @@ async function handlePaymentConfirmation({ session_id }) {
     throw new BadRequestError('Payment not verified');
   }
 
+  console.log("session",session);
+  
   // Step 3: Create the order
   const userId = session.metadata.userId;
   const address = JSON.parse(session.metadata.address);
