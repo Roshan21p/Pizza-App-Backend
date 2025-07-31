@@ -108,50 +108,51 @@ async function sendOrderConfirmationEmail({
   paymentAmount,
   currency
 }) {
-  console.log( customerEmail,
-  lineItems,
-  address,
-  orderId,
-  paymentAmount,
-  currency);
-  
-    // Generate the email content using the dynamic template
-    const emailContent = Order_Confirmation_Template.replace(
-      '{name}',
-      customerEmail.split('@')[0]
-    ) // Use the part before @ as the name (optional)
-      .replace('{orderId}', orderId)
-      .replace(
-        '{lineItems}',
-        lineItems
-          .map(
-            (item) => `
+  console.log(
+    customerEmail,
+    lineItems,
+    address,
+    orderId,
+    paymentAmount,
+    currency
+  );
+
+  // Generate the email content using the dynamic template
+  const emailContent = Order_Confirmation_Template.replace(
+    '{name}',
+    customerEmail.split('@')[0]
+  ) // Use the part before @ as the name (optional)
+    .replace('{orderId}', orderId)
+    .replace(
+      '{lineItems}',
+      lineItems
+        .map(
+          (item) => `
             <tr>
                 <td>${item.price_data.product_data.name}</td> 
                 <td>${item.quantity}</td>
                 <td>${(item.price_data.unit_amount / 100).toFixed(2)} ${currency.toUpperCase()}</td>
             </tr>
           `
-          )
-          .join('')
-      )
-      .replace('{orderTotal}', paymentAmount.toFixed(2)) // Ensure total is in proper format
-      .replace('{currency}', currency.toUpperCase())
-      .replace(
-        '{address}',
-        `${address.flat}, ${address.area}, ${address.landmark}, ${address.pincode}, ${address.city}, ${address.state}`
-      );
+        )
+        .join('')
+    )
+    .replace('{orderTotal}', paymentAmount.toFixed(2)) // Ensure total is in proper format
+    .replace('{currency}', currency.toUpperCase())
+    .replace(
+      '{address}',
+      `${address.flat}, ${address.area}, ${address.landmark}, ${address.pincode}, ${address.city}, ${address.state}`
+    );
 
-    // Send the email
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM_EMAIL,
-      to: customerEmail,
-      subject: 'Order Confirmation - Your Order with Pizzify',
-      html: emailContent
-    });
+  // Send the email
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM_EMAIL,
+    to: customerEmail,
+    subject: 'Order Confirmation - Your Order with Pizzify',
+    html: emailContent
+  });
 
-    console.log('Order confirmation email sent successfully!');
- 
+  console.log('Order confirmation email sent successfully!');
 }
 
 module.exports = {

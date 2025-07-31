@@ -68,14 +68,12 @@ async function handleCheckoutSession(req) {
     }
   });
 
-  console.log("session",session);
-  
+  console.log('session', session);
 
   return { session, totalAmount };
 }
 
 async function handlePaymentConfirmation({ session_id }) {
-
   if (!session_id) {
     throw new BadRequestError('Session ID is required');
   }
@@ -83,14 +81,13 @@ async function handlePaymentConfirmation({ session_id }) {
   // Step 1: Retrieve the Stripe session
   const session = await stripe.checkout.sessions.retrieve(session_id);
 
-
   // Step 2: Verify payment status
   if (session.payment_status !== 'paid') {
     throw new BadRequestError('Payment not verified');
   }
 
-  console.log("session",session);
-  
+  console.log('session', session);
+
   // Step 3: Create the order
   const userId = session.metadata.userId;
   const address = JSON.parse(session.metadata.address);
@@ -134,8 +131,8 @@ async function handlePaymentConfirmation({ session_id }) {
 
 async function fetchAllPayments(req) {
   try {
-    const {startDate, endDate} = req.query;    
-    
+    const { startDate, endDate } = req.query;
+
     // Initialize an array with all months in order
     let monthlyCounts = Array.from({ length: 12 }, (_, index) => ({
       monthInNumber: index,
@@ -157,16 +154,19 @@ async function fetchAllPayments(req) {
       const monthInNumber = paymentDate.getMonth();
       const paymentTimeStamp = payment.created;
 
-      if(paymentTimeStamp >= startTimeStamp && paymentTimeStamp <= endTimeStamp){
+      if (
+        paymentTimeStamp >= startTimeStamp &&
+        paymentTimeStamp <= endTimeStamp
+      ) {
         if (payment.status === 'succeeded') {
           totalAmount += payment.amount_received / 100;
-  
+
           monthlyCounts[monthInNumber].count += 1;
           monthlyCounts[monthInNumber].amount += payment.amount_received / 100;
         }
       }
     });
-     
+
     // Convert month numbers to month names (optional)
     const monthNames = [
       'January',

@@ -4,6 +4,7 @@ const fs = require('fs/promises');
 const InternalServerError = require('../utils/internalServerError');
 const NotFoundError = require('../utils/notFoundError');
 const path = require('path');
+const Cart = require('../schema/cartSchema');
 
 async function createProduct(productDetails) {
   // 1. We should check if an image is coming to createthe product, then we should first upload it on cloudinary
@@ -82,7 +83,17 @@ async function deleteProductById(productId) {
     throw new InternalServerError('Failed to delete Product assets');
   }
 
+  // Step 1: Delete the product
   await product.deleteOne();
+
+  // Step 2: Remove this product from all cart items
+  const result = await Cart.updateMany(
+    { 'items.product': productId },
+    { $pull: { items: { product: productId } } }
+  );
+
+  console.log(result);
+
   return product;
 }
 

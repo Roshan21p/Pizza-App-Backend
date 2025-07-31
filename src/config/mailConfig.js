@@ -3,7 +3,7 @@ const {
   SMTP_HOST,
   SMTP_PORT,
   SMTP_PASSWORD,
-  SMTP_USERNAME,
+  SMTP_USERNAME
 } = require('./serverConfig');
 
 const transporter = nodemailer.createTransport({
@@ -11,16 +11,16 @@ const transporter = nodemailer.createTransport({
   port: SMTP_PORT,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: SMTP_USERNAME,     
+    user: SMTP_USERNAME,
     pass: SMTP_PASSWORD
   }
 });
 
 transporter.verify((error) => {
   if (error) {
-    console.log("SMTP error:", error);
+    console.log('SMTP error:', error);
   } else {
-    console.log("SMTP connection is working ");
+    console.log('SMTP connection is working ');
   }
 });
 

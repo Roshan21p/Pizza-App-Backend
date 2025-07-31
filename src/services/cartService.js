@@ -6,9 +6,16 @@ const NotFoundError = require('../utils/notFoundError');
 async function getCart(userId) {
   const cart = await getCartByUserId(userId);
 
+  console.log(cart);
+
   if (!cart) {
     throw new NotFoundError('Not able to find Cart');
   }
+
+  if (cart) {
+    cart.items = cart.items.filter((item) => item.product !== null);
+  }
+
   return cart;
 }
 
