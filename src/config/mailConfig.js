@@ -16,12 +16,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-transporter.verify((error) => {
-  if (error) {
-    console.log('SMTP error:', error);
-  } else {
-    console.log('SMTP connection is working ');
-  }
-});
+
 
 module.exports = { transporter };

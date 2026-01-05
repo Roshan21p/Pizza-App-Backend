@@ -13,6 +13,9 @@ async function sendResetPasswordUrl(email, resetPasswordUrl, name) {
       resetPasswordUrl
     ).replace('{name}', name);
 
+    // Verify connection before sending
+    await transporter.verify();
+
     await transporter.sendMail({
       from: SMTP_FROM_EMAIL,
       to: email,
@@ -32,6 +35,9 @@ async function sendPasswordChangeNotification(email, name) {
       name
     ).replace('{homepageUrl}', FRONTEND_URL);
 
+    // Verify connection before sending
+    await transporter.verify();
+
     await transporter.sendMail({
       from: SMTP_FROM_EMAIL,
       to: email,
@@ -46,6 +52,9 @@ async function sendPasswordChangeNotification(email, name) {
 
 async function generateContactUsEmail(recipientEmail, emailContent) {
   try {
+    // Verify connection before sending
+    await transporter.verify();
+
     // Send the email with the provided content
     await transporter.sendMail({
       from: SMTP_FROM_EMAIL,
@@ -144,6 +153,9 @@ async function sendOrderConfirmationEmail({
       `${address.flat}, ${address.area}, ${address.landmark}, ${address.pincode}, ${address.city}, ${address.state}`
     );
 
+    // Verify connection before sending
+    await transporter.verify();
+    
   // Send the email
   await transporter.sendMail({
     from: process.env.SMTP_FROM_EMAIL,

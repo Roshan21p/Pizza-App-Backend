@@ -112,14 +112,15 @@ async function handlePaymentConfirmation({ session_id }) {
     throw new InternalServerError();
   }
 
-  await sendOrderConfirmationEmail({
-    customerEmail: session.customer_email,
-    lineItems,
-    address,
-    orderId: order._id,
-    paymentAmount: paymentDetails.paymentAmount,
-    currency: paymentDetails.currency
-  });
+  // Recommended: fire-and-forget email, no await
+sendOrderConfirmationEmail({
+  customerEmail: session.customer_email,
+  lineItems,
+  address,
+  orderId: order._id,
+  paymentAmount: paymentDetails.paymentAmount,
+  currency: paymentDetails.currency
+}).catch(console.error);
 
   return {
     orderId: order._id,
